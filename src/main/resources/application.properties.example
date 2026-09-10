@@ -1,0 +1,36 @@
+# --- Datasource / PostgreSQL ---
+quarkus.datasource.db-kind=postgresql
+quarkus.datasource.username=username od database
+quarkus.datasource.password=pass
+quarkus.datasource.jdbc.url=${DB_URL:jdbc:postgresql://localhost:5432/orders_db}
+
+quarkus.hibernate-orm.database.generation=update
+quarkus.flyway.migrate-at-start=true
+
+# --- Exchange rate REST client (Quarkus REST Client Reactive) ---
+quarkus.rest-client.exchange-rate-api.url=https://open.er-api.com
+quarkus.rest-client.exchange-rate-api.scope=jakarta.inject.Singleton
+quarkus.rest-client.exchange-rate-api.connect-timeout=5000
+quarkus.rest-client.exchange-rate-api.read-timeout=5000
+
+quarkus.http.port=8080
+%dev.quarkus.log.category."com.example.orders".level=DEBUG
+quarkus.console.basic=true
+# --- Kafka: outgoing order-created events ---
+mp.messaging.outgoing.order-events.connector=smallrye-kafka
+mp.messaging.outgoing.order-events.topic=order-events
+mp.messaging.outgoing.order-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+
+# --- Kafka: incoming order-created events (consumer side) ---
+mp.messaging.incoming.order-events-in.connector=smallrye-kafka
+mp.messaging.incoming.order-events-in.topic=order-events
+mp.messaging.incoming.order-events-in.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+mp.messaging.incoming.order-events-in.group.id=order-indexer
+mp.messaging.incoming.order-events-in.auto.offset.reset=earliest
+
+# --- OpenSearch REST client ---
+quarkus.rest-client.opensearch-api.url=https://localhost:9200
+quarkus.tls.trust-all=true
+quarkus.rest-client.opensearch-api.username=admin
+quarkus.rest-client.opensearch-api.password=passopensearch
+kafka.bootstrap.servers=localhost:9092
